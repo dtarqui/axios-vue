@@ -1,8 +1,30 @@
 import Vue from 'vue'
 import App from './App.vue'
+import axios from 'axios'
 
-Vue.config.productionTip = false
+import router from './router'
+import store from './store'
+
+axios.defaults.baseURL = 'https://vue-http-fulano.firebaseio.com/'
+axios.defaults.headers.common['Authorization'] = 'fasfdsa'
+axios.defaults.headers.get['Accepts'] = 'application/json'
+
+const reqInterceptor = axios.interceptors.request.use(config => {
+  console.log('Request Interceptor', config)
+  return config
+})
+const resInterceptor = axios.interceptors.response.use(res => {
+  console.log('Response Interceptor', res)
+  return res
+})
+
+// This is for delete insterceptors 
+axios.interceptors.request.eject(reqInterceptor)
+axios.interceptors.response.eject(resInterceptor)
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
+})
